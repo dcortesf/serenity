@@ -7,28 +7,28 @@ package utils
 
 import (
     "bufio"
-    "fmt"
     "os"
     "io/ioutil"
+    "fmt"
   )
 
   var secretData map[string]string
 
-  func main(){
-    ReadSecret("/Users/dani/test/secrets")
-    fmt.Println(GetValue("user"))
-  }
+//  Read a secret from mount path. Mount path shouldn't finalize in /
 
-
-/**
-  Read a secret from mount path. Mount path shouldn't finalize in /
-*/
   func ReadSecret(path string){
+
+    if len(path) == 0{
+      fmt.Println("ERROR - Secret path is null")
+      os.Exit(0)
+    }
 
     secretData = map[string]string{}
     listDir,_ := ioutil.ReadDir(path)
 
     for i:=0; i<len(listDir);i++{
+
+      if (listDir[i].IsDir()){ continue }
 
       f, _ := os.Open(path+"/"+listDir[i].Name())
       scanner := bufio.NewScanner(f)
